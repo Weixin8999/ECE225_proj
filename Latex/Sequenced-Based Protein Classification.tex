@@ -35,8 +35,8 @@ Nowadays, high-throughput biological sequencing becomes faster and more economic
 The advantages of using Machine Learning for classification are obvious: high-speed and low-labor-cost compared to the traditional experimental methods. Classifying proteins according to sequences enables machines to do classification once they get the data instead of using the experimental method that requires waiting for the process of chemical reactions. By utilizing computers without the supervision of scientists or researchers, we reduced the labor costs significantly. Original data can be down loaded from \url{http://www.rcsb.org/pdb/}.
 
 \section{Dataset}
-\subsection{Dataset discription}
-This is a protein data set retrieved from Research Collaboratory for Structural Bioinformatics (RCSB) Protein Data Bank (PDB). It contains atomic coordinates and other information describing proteins and other important biological macromolecules. Structural biologists use methods such as X-ray crystallography, NMR spectroscopy, and cryo-electron microscopy to determine the location of each atom relative to each other in the molecule. Here has a table containing basic dataset info we may use: Table   \ref{tab:dataset}
+\subsection{Dataset description}
+This is a protein data set retrieved from Research Collaboratory for Structural Bioinformatics (RCSB) Protein Data Bank (PDB). It contains atomic coordinates and other information describing proteins and other important biological macromolecules. Structural biologists use methods such as X-ray crystallography, NMR spectroscopy, and cryo-electron microscopy to determine the location of each atom relative to each other in the molecule. Here has a table containing basic dataset info we may use: Table.\ref{tab:dataset}
 
 \begin{table*}
   \centering
@@ -61,7 +61,7 @@ This is a protein data set retrieved from Research Collaboratory for Structural 
 
 \subsection{Data preprocessing}
 \subsubsection{Data Preparation}
-We used a protein dataset retrieved from Research Collaboratory for Structural Bioinformatics (RCSB) Protein Data Bank (PDB). It contains protein metadata which includes details on protein classification, extraction methods, experimental technique, etc. However, in this project we mainly focused on the sequence data. From the dataset, we observed that there are thousands of kinds of protein and many of them only take a small portion of the total. For a more straightforward solution to the problem, we only took top10 categories of proteins within the data, namely, hydrolase, transferase, oxidoreductase, immune system, lyase, hydrolase/hydrolase inhibitor, transcription, viral protein, transport protein and virus. The image below\ref{3} shows the percentage of top 10 class in dataset. Nevertheless, even the top10 categories of proteins do not possess uniform distribution and an imbalanced dataset could often cause the precision metric to be meaningless\cite{chawla2004special}. Thus, in the next step we up-sampled the minorities to make each category has the same amount of sequences. In the following processes, the data was separated as 90 \% of training set and 10 \% of the test set. And separate multi sequence of one protein as different sequence input.
+We used a protein dataset retrieved from Research Collaboratory for Structural Bioinformatics (RCSB) Protein Data Bank (PDB). It contains protein metadata which includes details on protein classification, extraction methods, experimental technique, etc. However, in this project we mainly focused on the sequence data. From the dataset, we observed that there are thousands of kinds of protein and many of them only take a small portion of the total. For a more straightforward solution to the problem, we only took top10 categories of proteins within the data, namely, hydrolase, transferase, oxidoreductase, immune system, lyase, hydrolase/hydrolase inhibitor, transcription, viral protein, transport protein and virus. Figure.\ref{3} shows the percentage of top 10 class in dataset. Nevertheless, even the top10 categories of proteins do not possess uniform distribution and an imbalanced dataset could often cause the precision metric to be meaningless\cite{chawla2004special}. Thus, in the next step we up-sampled the minorities to make each category has the same amount of sequences. In the following processes, the data was separated as 90 \% of training set and 10 \% of the test set. And separate multi sequence of one protein as different sequence input.
 \begin{figure}
   \centering
   \includegraphics[width=\linewidth]{3.png}
@@ -72,22 +72,22 @@ We used a protein dataset retrieved from Research Collaboratory for Structural B
 \subsubsection{Vectorization}
 One of the vital stages in our pipeline is converting a sequence of amino acids of data into features that are readable to machine learning models. Here we adopt the Count-Vectorization method that is frequently utilized in NLP problems to vectorize the sequences. Given a sequence of amino acids, it counts the frequency of each amino acid and then output a vector of frequency. However, the drawback of this approach is obvious, it failed to address the connection between adjacent amino acids and only the count of each amino acid will impact the output. In proteins, it is not the individual amino acids that determine the characteristics of the protein. We must also consider the secondary and tertiary structures that are formed via the bonds of amino acids, in other words, the arrangement of amino acids does matter. Hence, we need to take more than one of the continuous amino acids as our frequency counter, or short sequence, in this approach. By increasing this range, we make the kinds of short sequence much greater and hence result in sparser vector. The figure.1 below illustrates the vectorization process. In range size greater than 1, the features would be the count of short sequences like ‘AA, AM, AH’. Our analysis afterwards includes the investigation relationship of this range with the model performance. Figure.\ref{1} illustrates the vectorization process, when we set word size to be 2 in sequence.
 
-\begin{figure*}[h]
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\linewidth]{2.jpeg}
+  \caption{Pearson Correlation Matrix for other features in the dataset}
+  \label{2}
+\end{figure}
+\subsubsection{Correlation}
+
+We also considered other features in the dataset, such as residueCount, resolution, etc.. In order to get a better understanding of the correlations between the physical attributes, we build a Pearson Correlation Matrix. An absolute value closer to 1 represents a stronger correlation between the two factors, further represents a weaker correlation. From the Figure.\ref{2} we can tell that these attributes all have fairly small correlation with the classification.
+
+\begin{figure*}
   \centering
   \includegraphics[width=\linewidth]{1.jpeg}
   \caption{Illustration of the vectorization process, word size = 2}
   \label{1}
 \end{figure*}
-
-\subsubsection{Correlation}
-We also considered other features in the dataset, such as residueCount, resolution, etc.. In order to get a better understanding of the correlations between the physical attributes, we build a Pearson Correlation Matrix. An absolute value closer to 1 represents a stronger correlation between the two factors, further represents a weaker correlation. From the plot below\ref{2} we can tell that these attributes all have fairly small correlation with the classification.
-
-\begin{figure}
-  \centering
-  \includegraphics[width=\linewidth]{2.jpeg}
-  \caption{Pearson Correlation Matrix for other features in the dataset}
-  \label{1}
-\end{figure}
 
 \section{Methods}
 \subsection{Naive Bayes}
@@ -142,7 +142,7 @@ Therefore, we continue to analysis the Naive Bayes model next. Figure.\ref{5} sh
   \centering
   \includegraphics[width=\linewidth]{5.jpeg}
   \caption{The confusion matrix for our best Naïve Bayes model}
-  \label{4}
+  \label{5}
 \end{figure}
 
 And Table.\ref{tab} shows the results of our best Naïve Bayes model, we can tell not from the precision rates but also from the recalls that the model behaves generally uniform among the ten categories.
